@@ -63,10 +63,17 @@ def main():
 
     check(EXCUSE)
     text = EXCUSE + "\n"
+    # Byte budget: the gate counts characters (134 here, inside 1-200),
+    # the tie-break counts bytes, so pin the exact output size and prove
+    # the written file matches. 137 bytes = 134 chars + newline, with the
+    # em-dash counting 3 bytes.
+    assert len(text.encode("utf-8")) == 137, "output must be 137 bytes"
 
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(text)
+    with open("/output/entry.txt", encoding="utf-8") as f:
+        assert f.read() == text, "written file does not match the excuse"
 
 
 if __name__ == "__main__":
